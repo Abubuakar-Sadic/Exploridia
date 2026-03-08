@@ -7,7 +7,7 @@ function DestinationDetails() {
 
   const location = useLocation();
   const destination = location.state?.destination;
-
+  const [loadingFlights, setLoadingFlights] = useState(false);
   const [flights, setFlights] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [error, setError] = useState("");
@@ -36,56 +36,43 @@ const saveTrip = () => {
 
 };
 
-
 useEffect(() => {
 
-  async function fetchFlights() {
+  if (!destination?.iataCode) return;
 
-    if (!destination?.iataCode) return;
+  async function loadData() {
 
     try {
 
-      const data = await getFlightOffers(destination.iataCode);
+      // Fetch flights
+      const flightData = await getFlightOffers(destination.iataCode);
 
-      if (!data || data.length === 0) {
+      if (flightData && flightData.length > 0) {
+        setFlights(flightData);
+      } else {
         setError("No flight offers available for this destination.");
-        return;
       }
 
-      setFlights(data);
+      // Fetch hotels
+      const hotelData = await getHotels(destination.iataCode);
+
+      if (hotelData && hotelData.length > 0) {
+        setHotels(hotelData.slice(0, 5));
+      }
 
     } catch (err) {
 
       console.error(err);
-      setError("Failed to load flight offers.");
+      setError("Failed to load travel information.");
 
     }
 
   }
 
-  fetchFlights();
-
-  async function fetchHotels() {
-
-    try {
-
-      if (!destination?.iataCode) return;
-
-      const data = await getHotels(destination.iataCode);
-
-      setHotels(data.slice(0,5));
-
-    } catch (err) {
-
-      console.error(err);
-
-    }
-
-  }
-
-  fetchHotels();
+  loadData();
 
 }, [destination]);
+
 
 
   if (!destination) {
@@ -95,27 +82,27 @@ useEffect(() => {
   return (
     <div>
 
-      <h2 className="text-2xl font-semibold mb-4">
+      <h2 className="text-2xl font-semibold mb-4 text-white">
         {destination.name}
       </h2>
 
-      <p className="mb-2">
+      <p className="mb-2 text-white">
         Country: {destination.address?.countryName}
       </p>
 
-     <p className="mb-4">
+     <p className="mb-4 text-white">
   City Code: {destination.iataCode || "Not available"}
 </p>
 
 <button
   onClick={saveTrip}
-  className="bg-blue-500 text-white px-4 py-2 rounded mb-6"
+  className="bg-blue-500 text-white px-4 py-2 rounded mb-6 hover:bg-blue-600 transition"
 >
   Save Trip
 </button>
 
 
-      <h3 className="text-xl font-semibold mt-6 mb-4">
+      <h3 className="text-xl font-semibold mt-6 mb-4 text-white">
         Flight Offers
       </h3>
 
@@ -126,26 +113,30 @@ useEffect(() => {
       ) : (
         <ul className="space-y-4">
           {flights.map((flight) => (
-            <li key={flight.id} className="border p-4 rounded">
+          <li key={flight.id} className="border p-4 rounded shadow-sm">
 
-              <p>
-                Airline: {flight.validatingAirlineCodes?.[0]}
-              </p>
+  <p className="font-semibold">
+    Airline: {flight.validatingAirlineCodes?.[0]}
+  </p>
 
-              <p>
-                Price: {flight.price.total} {flight.price.currency}
-              </p>
+  <p>
+    Price: {flight.price.total} {flight.price.currency}
+  </p>
 
-              <p>
-                Departure: {flight.itineraries[0].segments[0].departure.at}
-              </p>
+  <p>
+    Departure:
+    {" "}
+    {new Date(
+      flight.itineraries[0].segments[0].departure.at
+    ).toLocaleString()}
+  </p>
 
-            </li>
+</li>
           ))}
         </ul>
       )}
 
-      <h3 className="text-xl font-semibold mt-10 mb-4">
+      <h3 className="text-xl font-semibold mt-10 mb-4 text-white">
   Hotels
 </h3>
 
@@ -159,17 +150,17 @@ useEffect(() => {
 
     {hotels.map((hotel) => (
 
-      <li key={hotel.hotelId} className="border p-4 rounded">
+    <li key={hotel.hotelId} className="border p-4 rounded shadow-sm">
 
-        <p className="font-semibold">
-          {hotel.name}
-        </p>
+  <p className="font-semibold text-lg">
+    {hotel.name}
+  </p>
 
-        <p>
-          Hotel ID: {hotel.hotelId}
-        </p>
+  <p className="text-gray-600">
+    Hotel ID: {hotel.hotelId}
+  </p>
 
-      </li>
+</li>
 
     ))}
 

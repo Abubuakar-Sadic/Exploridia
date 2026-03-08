@@ -9,13 +9,13 @@ function DestinationCard({ destination }) {
       to={`/destination/${destination.id}`}
       state={{ destination }}
     >
-      <div className="border p-4 rounded shadow hover:shadow-lg hover:bg-gray-50 transition">
+      <div className="border h-24 bg-gray-700 p-4 rounded shadow hover:shadow-lg hover:bg-blue-400 transition duration-200">
 
-        <h3 className="text-lg font-semibold">
+        <h3 className="text-lg font-semibold text-white">
           {destination.name}
         </h3>
 
-        <p className="text-gray-600">
+        <p className="text-gray-800">
           {destination.address?.countryName}
         </p>
 
