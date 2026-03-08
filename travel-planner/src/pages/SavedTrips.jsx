@@ -26,9 +26,10 @@ function SavedTrips() {
 
     <div>
 
-      <h2 className="text-2xl font-semibold mb-6">
-        Saved Trips
-      </h2>
+     <h2 className="text-3xl font-bold mb-6">
+  My Saved Trips
+</h2>
+
 
       {trips.length === 0 ? (
 
