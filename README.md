@@ -1,13 +1,3 @@
-Here is a **complete, professional README** you can use for your capstone. It is written in the style expected for **GitHub portfolio projects**, **bootcamp submissions**, and **frontend developer portfolios**. It clearly explains your app, technologies, APIs, and features.
-
-You can copy this directly into:
-
-```
-README.md
-```
-
----
-
 # 🌍 Travel Planner App
 
 A modern **React travel planning application** that allows users to search for destinations, explore travel information, view flight and hotel offers, and save personalized travel itineraries.
