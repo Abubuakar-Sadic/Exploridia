@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Layout from "./components/Layout.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import DestinationDetails from "./pages/DestinationDetails.jsx";
@@ -20,6 +21,7 @@ function App() {
           <Route path="/saved-trips" element={<SavedTrips />} />
         </Route>
       </Routes>
+      <SpeedInsights />
     </BrowserRouter>
   );
 }
